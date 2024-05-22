@@ -3,6 +3,8 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import {
   useBlockNumber,
+  useAccount,
+  useBalance,
 } from "@starknet-react/core";
 import { BlockNumber } from "starknet";
 
@@ -15,6 +17,14 @@ const Page: React.FC = () => {
   });
   const workshopEnds = 68224;
   // Step 1 --> Read the latest block -- End
+
+  // Step 2 --> Read your balance -- Start
+  const { address: userAddress } = useAccount();
+  const { isLoading: balanceIsLoading, isError: balanceIsError, error: balanceError, data: balanceData } = useBalance({
+    address: userAddress,
+    watch: true
+  });
+  // Step 2 --> Read your balance -- End
 
   return (
     <div className="h-screen flex flex-col justify-center items-center">
@@ -43,6 +53,25 @@ const Page: React.FC = () => {
         Are we live?
       </div> */}
       {/* Step 1 --> Read the latest block -- End */}
+
+      {/* Step 2 --> Read your balance -- Start */}
+      {!balanceIsLoading && !balanceIsError && (
+        <div
+          className={`p-4 w-full max-w-md m-4 bg-white border-black border`}
+        >
+          <h3 className="text-2xl font-bold mb-2">Read your Balance</h3>
+          <p>Symbol: {balanceData?.symbol}</p>
+          <p>Balance: {Number(balanceData?.formatted).toFixed(4)}</p>
+        </div>
+      )}
+      {/* <div
+        className={`p-4 w-full max-w-md m-4 bg-white border-black border`}
+      >
+        <h3 className="text-2xl font-bold mb-2">Read your Balance</h3>
+        <p>Symbol: Ticker</p>
+        <p>Balance: xyz</p>
+      </div> */}
+      {/* Step 2 --> Read your balance -- End */}
 
     </div>
   );
