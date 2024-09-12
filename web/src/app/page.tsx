@@ -1,8 +1,11 @@
 'use client';
 import { FC } from 'react';
 import dynamic from 'next/dynamic';
-import { useAccount, useBalance, useBlockNumber } from '@starknet-react/core';
+import { useAccount, useBalance, useBlockNumber, useReadContract } from '@starknet-react/core';
 import { BlockNumber } from 'starknet';
+import { ABI } from "../abis/abi";
+import { type Abi } from "starknet";
+
 const WalletBar = dynamic(() => import('../components/WalletBar'), { ssr: false })
 const Page: FC = () => {
 
@@ -20,6 +23,18 @@ const Page: FC = () => {
     watch: true
   });
   // Step 2 --> Read your balance -- End
+
+  // Step 3 --> Read from a contract -- Start
+  const contractAddress = "0x1c758616421a10f9df071a5d985c72e3907cf98d553204cf8dee354647c736";
+  const { data: readData, refetch: dataRefetch, isError: readIsError, isLoading: readIsLoading, error: readError } = useReadContract({
+    functionName: "get_balance",
+    args: [],
+    abi: ABI as Abi,
+    address: contractAddress,
+    watch: true,
+    refetchInterval: 1000
+  });
+  // Step 3 --> Read from a contract -- End
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
@@ -64,6 +79,30 @@ const Page: FC = () => {
         </div>
 
         <div className="w-full max-w-md space-y-4">
+
+          {/* Step 3 --> Read from a contract -- Start */}
+          <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">Contract Balance</h3>
+            <p>Balance: {readData?.toString()}</p>
+            <button
+              onClick={() => dataRefetch()}
+              className="mt-2 border border-black text-black font-regular py-1 px-3 bg-yellow-300 hover:bg-yellow-500"
+            >
+              Refresh
+            </button>
+          </div>
+          {/* <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">Contract Balance</h3>
+            <p>Balance: 0</p>
+            <button
+              onClick={() => console.log("Refreshing...")}
+              className="mt-2 border border-black text-black font-regular py-1 px-3 bg-yellow-300 hover:bg-yellow-500"
+            >
+              Refresh
+            </button>
+          </div> */}
+          {/* Step 3 --> Read from a contract -- End */}
+
         </div>
       </div>
     </div >
