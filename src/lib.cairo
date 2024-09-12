@@ -30,6 +30,12 @@ mod HelloStarknet {
         new_balance: u256,
     }
 
+    #[constructor]
+    fn constructor(ref self: ContractState, initial_owner: ContractAddress) {
+        self.owner.write(initial_owner);
+        self.balance.write(0);
+    }
+
     #[abi(embed_v0)]
     impl HelloStarknetImpl of super::IHelloStarknet<ContractState> {
         fn increase_balance(ref self: ContractState, amount: u256) {

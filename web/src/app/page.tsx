@@ -13,7 +13,7 @@ const Page: FC = () => {
   const { data: blockNumberData, isLoading: blockNumberIsLoading, isError: blockNumberIsError } = useBlockNumber({
     blockIdentifier: 'latest' as BlockNumber
   });
-  const workshopEnds = 176000;
+  const workshopEnds = 180000;
   // Step 1 --> Read the latest block -- End
 
   // Step 2 --> Read your balance -- Start
@@ -25,7 +25,7 @@ const Page: FC = () => {
   // Step 2 --> Read your balance -- End
 
   // Step 3 --> Read from a contract -- Start
-  const contractAddress = "0x3f5895a1d53a91ac409267533fc02465ea8610602484ce99a86afd41178b999";
+  const contractAddress = "0x1c758616421a10f9df071a5d985c72e3907cf98d553204cf8dee354647c736";
   const { data: readData, refetch: dataRefetch, isError: readIsError, isLoading: readIsLoading, error: readError } = useReadContract({
     functionName: "get_balance",
     args: [],
