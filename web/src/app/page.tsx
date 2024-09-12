@@ -102,6 +102,25 @@ const Page: FC = () => {
   };
   // Step 4 --> Write to a contract -- End
 
+  // Step 5 --> Reset balance -- Start
+  const resetBalanceCall = useMemo(() => {
+    if (!contract) return undefined;
+    try {
+      return contract.populate("reset_balance");
+    } catch (error) {
+      console.error("Error populating reset_balance call:", error);
+      return undefined;
+    }
+  }, [contract]);
+  const {
+    send: resetBalance,
+    isPending: resetIsPending,
+    data: resetData,
+  } = useSendTransaction({
+    calls: resetBalanceCall ? [resetBalanceCall] : [],
+  });
+  // Step 5 --> Reset balance -- End
+
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
       <h1 className="text-3xl font-bold text-center mb-6">Starknet Frontend Workshop</h1>
@@ -142,6 +161,38 @@ const Page: FC = () => {
             <p>Balance: 100</p>
           </div> */}
           {/* Step 2 --> Read your balance -- End */}
+
+          {/* Step 5 --> Reset balance by owner only -- Start */}
+          <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">Reset Balance</h3>
+            <button
+              onClick={() => resetBalance()}
+              disabled={resetIsPending || !resetBalanceCall || !userAddress}
+              className="mt-2 border border-black text-black font-regular py-2 px-4 bg-yellow-300 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              {resetIsPending ? <LoadingState message="Resetting..." /> : "Reset Balance"}
+            </button>
+            {resetData?.transaction_hash && (
+              <p className="mt-2 text-sm">
+                Transaction sent: {resetData.transaction_hash}
+              </p>
+            )}
+          </div>
+          {/* <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">Reset Balance</h3>
+            <button
+              onClick={() => console.log("Resetting...")}
+              disabled={false}
+              className="mt-2 border border-black text-black font-regular py-2 px-4 bg-yellow-300 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Reset Balance
+            </button>
+            <p className="mt-2 text-sm">
+              Transaction sent: url
+            </p>
+          </div> */}
+          {/* Step 5 --> Reset balance by owner only -- End */}
+
         </div>
 
         <div className="w-full max-w-md space-y-4">
