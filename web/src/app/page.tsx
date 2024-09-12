@@ -1,7 +1,7 @@
 'use client';
 import { FC } from 'react';
 import dynamic from 'next/dynamic';
-import { useBlockNumber } from '@starknet-react/core';
+import { useAccount, useBalance, useBlockNumber } from '@starknet-react/core';
 import { BlockNumber } from "starknet";
 const WalletBar = dynamic(() => import('../components/WalletBar'), { ssr: false })
 const Page: FC = () => {
@@ -12,6 +12,14 @@ const Page: FC = () => {
   });
   const workshopEnds = 176000;
   // Step 1 --> Read the latest block -- End
+
+  // Step 2 --> Read your balance -- Start
+  const { address: userAddress } = useAccount();
+  const { isLoading: balanceIsLoading, isError: balanceIsError, error: balanceError, data: balanceData } = useBalance({
+    address: userAddress,
+    watch: true
+  });
+  // Step 2 --> Read your balance -- End
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
@@ -39,6 +47,21 @@ const Page: FC = () => {
             <p>Current Block: 0</p>
           </div> */}
           {/* Step 1 --> Read the latest block -- End */}
+
+          {/* Step 2 --> Read your balance -- Start */}
+          {!balanceIsLoading && !balanceIsError && userAddress && (
+            <div className="p-4 bg-white border-black border">
+              <h3 className="text-lg font-bold mb-2">Your Balance</h3>
+              <p>Symbol: {balanceData?.symbol}</p>
+              <p>Balance: {Number(balanceData?.formatted).toFixed(4)}</p>
+            </div>
+          )}
+          {/* <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">Your Balance</h3>
+            <p>Symbol: XYZ</p>
+            <p>Balance: 100</p>
+          </div> */}
+          {/* Step 2 --> Read your balance -- End */}
 
         </div>
 
