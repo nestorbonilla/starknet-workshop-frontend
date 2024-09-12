@@ -1,76 +1,83 @@
 # Starknet Frontend Workshop
 
-Welcome to this workshop, where you'll learn how to build a frontend application using Starknet and Next.js together with the set of hooks available in Starknet-react.
+This workshop teaches you how to build a Starknet frontend application using NextJS, StarknetJS v6, and Starknet-react hooks. It's designed for developers with basic React and TypeScript knowledge who want to learn Starknet frontend development.
 
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
-* You have installed Node.js (version 14 or later) and npm. You can download them [here](https://nodejs.org/en/download/).
-* You have a basic understanding of Starknet Foundry if you'll deploy an instance.
-* You have a basic understanding of JavaScript and React.
+* Node.js (version 14 or later) and npm installed. Download them [here](https://nodejs.org/en/download/).
+* Basic understanding of Starknet Foundry (if you want to deploy your own contract instance).
+* Familiarity with TypeScript and React.
 
 ## Getting Started
 
 ### Starknet Foundry
 
-This project includes a Starknet Foundry repository with a sample smart contract used in the frontend web app. To deploy your own instance of the contract, use `sncast` to [declare](https://foundry-rs.github.io/starknet-foundry/starknet/declare.html) changes (if any) and/or [deploy](https://foundry-rs.github.io/starknet-foundry/starknet/deploy.html) an instance.
+This project includes a Starknet Foundry repository with a smart contract used in the frontend web app. The contract implements the following functionality:
+
+- Increase balance: Add to the contract's balance (emits an event).
+- Get balance: Retrieve the current balance.
+- Reset balance: Set the balance to zero (owner-only function).
+
+The contract also includes an owner field for access control and emits events for balance increases.
+
+To deploy your own instance, use `sncast` to [declare](https://foundry-rs.github.io/starknet-foundry/starknet/declare.html) changes and/or [deploy](https://foundry-rs.github.io/starknet-foundry/starknet/deploy.html) an instance.
 
 ### NextJS App
 
-The `web` directory contains a Next.js app based on the  [starknet-react](https://github.com/apibara/starknet-react) template. To get started, open your terminal, navigate to the `web` directory and install dependencies.
-```bash
-npm install
-# or
-yarn
-# or
-pnpm install
-# or
-bun install
-```
-I've updated libraries to ensure the latest versions are used. Once dependencies are updated, run the development server.
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The `web` directory contains a Next.js app based on the [starknet-react](https://github.com/apibara/starknet-react) template. Recent updates include:
 
-Open http://localhost:3000 with your browser to see the result.
+- Compatibility with the latest versions of Starknet JS and Starknet-react.
+- Upgrade to StarknetJS v6 (breaking changes from v5).
+- Full TypeScript support for type-safe development.
+
+To get started:
+
+1. Navigate to the `web` directory
+2. Copy `.env.template` to `.env.local` and fill in the required values
+3. Install dependencies:
+   ```bash
+   npm install
+   # or yarn, pnpm, bun
+   ```
+4. Run the development server:
+   ```bash
+   npm run dev
+   # or yarn dev, pnpm dev, bun dev
+   ```
+5. Open http://localhost:3000 in your browser
 
 ## Workshop Steps
 
-This workshop consists of five branches, each focusing on a specific step:
+This workshop consists of seven branches, each focusing on a specific step:
 
-**Getting Started (branch: 0-getting-started)**: Setup the initial workshop structure.
+**Getting Started (branch: 0-getting-started)**: Initial workshop structure setup.
 
-Then, proceed with the following steps:
+Then, proceed with:
 
-1. **Read Data (branch: 1-read-data)**: Retrieve the latest block number from the blockchain.
-2. **Read Balance (branch: 2-read-balance)**: Retrieve your account balance.
-3. **Read Contract (branch: 3-read-contract)**: Fetch data from a deployed smart contract.
-4. **Write Contract (branch: 4-write-contract)**: Update the status of a smart contract.
+1. **Read Data (branch: 1-read-data)**: Retrieve the latest block number.
+2. **Read Balance (branch: 2-read-balance)**: Fetch your account balance.
+3. **Read Contract (branch: 3-read-contract)**: Get data from a deployed smart contract.
+4. **Write Contract (branch: 4-write-contract)**: Update the smart contract's state.
+5. **Reset Balance (branch: 5-reset-balance)**: Allow the owner to reset the counter balance.
+6. **Get Events (branch: 6-get-events)**: Retrieve and display events from the smart contract.
 
-At the end of the workshop, the `main` branch will include all changes made throughout the steps, serving as a complete reference for the workshop.
-
-By following these steps, you'll gain hands-on experience building a frontend application with Starknet, Next.js, and StarknetReact.
+The `main` branch will contain all changes, serving as a complete reference.
 
 ## Troubleshooting
 
-If you encounter any problems, check the [issues](https://github.com/nestorbonilla/starknet-workshop-frontend/issues) in this repository for a solution. If you don't find what you're looking for, feel free to open a new issue.
+If you encounter issues, check the [issues](https://github.com/nestorbonilla/starknet-workshop-frontend/issues) in this repository or open a new one if needed.
 
-## Contributing to Starknet Frontend Workshop
+## Contributing
 
-To contribute to Starknet Frontend Workshop, follow these steps:
+To contribute to this workshop:
 
-1. Fork this repository.
-2. Clone your forked repository to your local machine.
-3. Create a new branch with `git checkout -b <branch_name>`.
-4. Make your changes and commit them with `git commit -m '<commit_message>'`.
-5. Push your changes to your branch with `git push origin <branch_name>`.
-6. Open a Pull Request to propose your changes to the original project.
+1. Fork the repository.
+2. Clone your fork locally.
+3. Create a new branch (`git checkout -b feature/AmazingFeature`).
+4. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+5. Push to the branch (`git push origin feature/AmazingFeature`).
+6. Open a Pull Request.
 
 Let's get started!

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { StarknetProvider } from "@/components/starknet-provider";
+import { Providers } from "@/components/Providers";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Basecamp IX",
-  description: "Frontend Workshop",
+  title: "Basecamp X",
+  description: "Starknet Frontend Workshop",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <StarknetProvider>{children}</StarknetProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

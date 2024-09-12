@@ -36,3 +36,11 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 .next
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Include template
+!.env.template

@@ -4,7 +4,7 @@
   "private": true,
   "author": {
     "name": "Nestor Bonilla",
-    "url": "https://x.com/0xNestor"
+    "url": "https://0xNestor.com"
   },
   "scripts": {
     "dev": "next dev",
@@ -14,16 +14,19 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.0.3",
-    "@starknet-react/chains": "^0.1.7",
-    "@starknet-react/core": "^2.8.1",
-    "get-starknet-core": "^3.3.0",
-    "next": "14.0.2",
+    "@starknet-react/chains": "3.0.0-beta.2",
+    "@starknet-react/core": "3.0.0-beta.2",
+    "@starknet-react/typescript-config": "0.0.0",
+    "get-starknet-core": "^4.0.0",
+    "lodash": "^4.17.21",
+    "next": "14.2.8",
     "react": "^18",
     "react-dom": "^18",
-    "starknet": "^5.24.3"
+    "starknet": "6.12.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
