@@ -1,10 +1,11 @@
 'use client';
-import { FC, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useAccount, useBalance, useBlockNumber, useContract, useReadContract, useSendTransaction, useTransactionReceipt } from '@starknet-react/core';
-import { BlockNumber } from 'starknet';
+import { BlockNumber, Contract, RpcProvider } from "starknet";
 import { ABI } from "../abis/abi";
 import { type Abi } from "starknet";
+import { formatAmount, shortenAddress } from '@/lib/utils';
 
 const WalletBar = dynamic(() => import('../components/WalletBar'), { ssr: false })
 const Page: FC = () => {
@@ -120,6 +121,50 @@ const Page: FC = () => {
     calls: resetBalanceCall ? [resetBalanceCall] : [],
   });
   // Step 5 --> Reset balance -- End
+
+  // Step 6 --> Get events from a contract -- Start
+  type ContractEvent = {
+    from_address: string;
+    keys: string[];
+    data: string[];
+  };
+  const provider = useMemo(() => new RpcProvider({ nodeUrl: process.env.NEXT_PUBLIC_RPC_URL }), []);
+  const [events, setEvents] = useState<ContractEvent[]>([]);
+  const lastCheckedBlockRef = useRef(0);
+  const { data: blockNumber } = useBlockNumber({ refetchInterval: 3000 });
+  const checkForEvents = useCallback(async (contract: Contract, currentBlockNumber: number) => {
+    if (currentBlockNumber <= lastCheckedBlockRef.current) {
+      return; // No new blocks, skip checking for events
+    }
+    try {
+      // Fetch events only for the new blocks
+      const fromBlock = lastCheckedBlockRef.current + 1;
+      const fetchedEvents = await provider.getEvents({
+        address: contract.address,
+        from_block: { block_number: fromBlock },
+        to_block: { block_number: currentBlockNumber },
+        chunk_size: 500,
+      });
+
+      if (fetchedEvents && fetchedEvents.events) {
+        setEvents(prevEvents => [...prevEvents, ...fetchedEvents.events]);
+      }
+
+      lastCheckedBlockRef.current = currentBlockNumber;
+    } catch (error) {
+      console.error('Error checking for events:', error);
+    }
+  }, [provider]);
+
+  useEffect(() => {
+    if (contract && blockNumber) {
+      checkForEvents(contract, blockNumber);
+    }
+  }, [contract, blockNumber, checkForEvents]);
+  const lastFiveEvents = useMemo(() => {
+    return [...events].reverse().slice(0, 5);
+  }, [events]);
+  // Step 6 --> Get events from a contract -- End
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
@@ -273,6 +318,57 @@ const Page: FC = () => {
             </a>
           </form> */}
           {/* Step 4 --> Write to a contract -- End */}
+
+          {/* Step 6 --> Get events from a contract -- Start */}
+          <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">
+              Contract Events ({events.length})
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th className="border-b border-gray-300 text-left p-2 font-semibold">Sender</th>
+                    <th className="border-b border-gray-300 text-right p-2 font-semibold">Added</th>
+                    <th className="border-b border-gray-300 text-right p-2 font-semibold">New Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lastFiveEvents.map((event, index) => (
+                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
+                      <td className="border-b border-gray-200 p-2">{shortenAddress(event.keys[1])}</td>
+                      <td className="border-b border-gray-200 p-2 text-right">{formatAmount(event.data[0])}</td>
+                      <td className="border-b border-gray-200 p-2 text-right">{formatAmount(event.data[2])}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {/* <div className="p-4 bg-white border-black border">
+            <h3 className="text-lg font-bold mb-2">
+              Contract Events (X)
+            </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th className="border-b border-gray-300 text-left p-2 font-semibold">Sender</th>
+                    <th className="border-b border-gray-300 text-right p-2 font-semibold">Added</th>
+                    <th className="border-b border-gray-300 text-right p-2 font-semibold">New Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr key={0}>
+                    <td className="border-b border-gray-200 p-2">0xNestor</td>
+                    <td className="border-b border-gray-200 p-2 text-right">1</td>
+                    <td className="border-b border-gray-200 p-2 text-right">1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div> */}
+          {/* Step 6 --> Get events from a contract -- End */}
 
         </div>
       </div>
