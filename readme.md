@@ -65,6 +65,66 @@ Then, proceed with:
 
 The `main` branch will contain all changes, serving as a complete reference.
 
+## Testing Guide
+
+This section provides guidance on testing your Starknet dApp. We use Playwright, a modern end-to-end testing framework.
+
+### Getting Started with Testing
+
+1. Install testing dependencies:
+```bash
+cd web
+npm install -D @playwright/test
+npx playwright install
+```
+
+2. Run the example tests:
+```bash
+# Run all tests
+npx playwright test
+
+# Run with UI mode for debugging
+npx playwright test --ui
+```
+
+### Example Tests
+
+We provide two types of examples:
+
+1. **Basic Examples** (`web/src/examples/`)
+   - `basic-wallet-test.ts`: Simple wallet connection test
+   - `basic-contract-test.ts`: Simple contract interaction test
+
+Example of a basic wallet test:
+```typescript
+test('wallet connection UI elements are present', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  
+  // Check wallet options
+  const argentXButton = page.getByTestId('wallet-option').filter({ hasText: 'argentX' });
+  const braavosButton = page.getByTestId('wallet-option').filter({ hasText: 'braavos' });
+  
+  await expect(argentXButton).toBeVisible();
+  await expect(braavosButton).toBeVisible();
+});
+```
+
+2. **Test Templates** (`web/src/test-template/`)
+   - `setup.ts`: Basic test configuration
+   - `wallet.test.ts`: Template for wallet tests
+
+### Testing Best Practices
+
+1. **Write Clear Tests**
+   - Use descriptive test names
+   - Follow the Arrange-Act-Assert pattern
+   - Keep tests independent
+
+2. **Use Reliable Selectors**
+   - Prefer data-testid for test-specific selectors
+   - Use ARIA roles and labels when possible
+   - Avoid brittle selectors like CSS classes
+
 ## Troubleshooting
 
 If you encounter issues, check the [issues](https://github.com/nestorbonilla/starknet-workshop-frontend/issues) in this repository or open a new one if needed.
